@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.sql.DataSource;
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @RestController
@@ -40,5 +42,17 @@ public class MainController {
 
         return "Hello World!";
     }
+
+    @RequestMapping(value="/missing_item", method=RequestMethod.GET)
+    public @ResponseBody Object getMissing(@RequestParam("name") String name) {
+        
+        MissingItem missingItem = new MissingItem();
+        List<Item> items = new ArrayList<>();
+        Item item = new Item(130,"Kshatriya Kebab");
+        items.add(item);
+        missingItem.setItems(items);
+        return missingItem;
+    }
+
 
 }
