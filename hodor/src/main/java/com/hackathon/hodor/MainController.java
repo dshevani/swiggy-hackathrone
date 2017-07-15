@@ -1,6 +1,7 @@
 package com.hackathon.hodor;
 
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.autoconfigure.*;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.*;
