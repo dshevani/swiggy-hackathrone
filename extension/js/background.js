@@ -20,5 +20,14 @@ chrome.runtime.onMessage.addListener(function(message, sendResponse) {
 			  chrome.tabs.sendMessage(tab.id, {message: data, type: message.type});
 			 });
 		});
+    } else if (message && message.type == 'improve_taste') {
+    	$.ajax({
+		  url: "http://127.0.0.1:8080/restaurant/" + message.rest_name + "/items",
+		}).done(function(data) {
+			chrome.tabs.getSelected(null, function(tab) {
+			  console.log("Background script is sending a message to contentscript:'" + data +"'");
+			  chrome.tabs.sendMessage(tab.id, {message: data, type: message.type});
+			 });
+		});
     }
 });
