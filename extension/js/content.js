@@ -9,6 +9,11 @@ chrome.runtime.sendMessage({type: 'get_price', rest_name: rest_name}, function(r
 	console.log("Blah2...");
 });
 
+delay(2000);
+chrome.runtime.sendMessage({type: 'improve_taste', rest_name: rest_name}, function(response) {
+	console.log("Blah3...");
+});
+
 chrome.runtime.onMessage.addListener(
  function(request, sender) {
 
@@ -43,6 +48,13 @@ chrome.runtime.onMessage.addListener(
 			final_map[item_prices[i].itemName] = item_prices[i].recommendedPrice
 		}
 		update_cost(final_map);
+	} else if (request.type == "improve_taste") {
+		items = request.message;
+		final_map = {};
+		for (var i = items.length - 1; i >= 0; i--) {
+			final_map[items[i]] = 1;
+		}
+		taste_increase(final_map);
 	}
   });
 
@@ -51,11 +63,36 @@ function update_cost(price_map) {
 	$(".food-item").each(function (index) {
 		var item_name = $(this).find("h5").text().trim();
 		if (price_map[item_name] != undefined) {
+			console.log($(this).find(".item-price").html());
 			var price = $(this).find(".item-price").text().trim();
 			var new_price = price_map[item_name];
-			$(this).find(".item-price:eq(1)").html(price + "&nbsp; <span style=\"color: red\">(" + new_price + ")<span>")
+			$(this).find(".item-price:eq(1)").html(price + "<br /> <span style=\"color: red\">Recommended Price:" + new_price + "<span>")
 		}
 	})
+}
+
+function taste_increase(items) {
+	console.log("get taste ");
+	console.log(items);
+	$(".food-item").each(function (index) {
+		var item_name = $(this).find("h5").text().trim();
+		if (items[item_name] != undefined) {
+			var price = $(this).find(".item-price").text().trim();
+			$(this).find(".item-price:eq(1)").html(price + "<br /> <button type=\"button\" class=\"btn btn-danger btn-xs\">Improve Taste</button>")
+		}
+	})
+}
+
+function delay(ms) {
+    var cur_d = new Date();
+    var cur_ticks = cur_d.getTime();
+    var ms_passed = 0;
+    while(ms_passed < ms) {
+        var d = new Date();  // Possible memory leak?
+        var ticks = d.getTime();
+        ms_passed = ticks - cur_ticks;
+        // d = null;  // Prevent memory leak?
+    }
 }
 
  // <button type=\"button\" class=\"btn btn-danger btn-xs\">Taste</button>

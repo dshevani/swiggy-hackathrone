@@ -11,11 +11,6 @@ public class JsonUtil {
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
     public static String serializeJson(Object object) throws JsonProcessingException {
-        ObjectMapper objectMapper = ObjectMapperProvider.INSTANCE.get();
-        //For UTs
-        if(null == objectMapper){
-            objectMapper = OBJECT_MAPPER;
-        }
-        return objectMapper.writeValueAsString(object);
+        return OBJECT_MAPPER.writeValueAsString(object);
     }
 }
