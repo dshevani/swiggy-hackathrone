@@ -1,19 +1,15 @@
 package com.hackathon.hodor;
 
-import com.mysql.jdbc.Driver;
-import com.sun.org.apache.xpath.internal.operations.Bool;
-import org.springframework.boot.autoconfigure.*;
-import org.springframework.jdbc.datasource.SimpleDriverDataSource;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.web.bind.annotation.*;
 
-import javax.sql.DataSource;
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 
 @RestController
 @EnableAutoConfiguration
+@CrossOrigin(origins = "*", maxAge = 3600)
 public class MainController {
 
 	private static Connection sqlConnection;
@@ -66,8 +62,8 @@ public class MainController {
             return null;
         List<Item> items = new ArrayList<>();
         try{
-            String sqlQuery = "select sum(quantity),item_price,m.`item_name`,r.`cuisine`,r.id from order_items o,restaurant_menu m,restaurants r " +
-                    "where o.`item_id`=m.`id` and m.`restaurant_id`=r.`id` and r.id!="+ restId +" and r.`area_id`="+area+" and r.`cuisine` like \"" +cuisine +
+            String sqlQuery = "select sum(quantity),item_price,m.`item_name`, r.`cuisine`,r.id from order_items o,restaurant_menu m,restaurants r " +
+                    "where o.`item_id`=m.`id` and m.`restaurant_id`=r.`id` and item_price > 30 and r.id!="+ restId +" and r.`area_id`="+area+" and r.`cuisine` like \"" +cuisine +
                     "\" group by item_id order by sum(quantity) desc limit 5;";
             ps = sqlConnection.prepareStatement(sqlQuery);
             rs = ps.executeQuery();
@@ -93,6 +89,17 @@ public class MainController {
 
         MissingItem missingItem = new MissingItem();
         List<Item> missingItems = new ArrayList<>();
+        //remove duplicates
+        Set<String> itemNameSet = new HashSet<>();
+        for (Iterator<Item> iterator = items.iterator(); iterator.hasNext(); ) {
+            Item item = iterator.next();
+            if(itemNameSet.contains(item.getName())){
+                iterator.remove();
+            }else {
+                itemNameSet.add(item.getName());
+            }
+        }
+
         for(Item item:items) {
             boolean found=false;
             for(String itemName :existingItems) {
@@ -104,8 +111,6 @@ public class MainController {
                 missingItems.add(item);
             }
         }
-
-
         missingItem.setItems(missingItems);
         return missingItem;
     }
