@@ -9,7 +9,11 @@ chrome.runtime.sendMessage({type: 'get_price', rest_name: rest_name}, function(r
 	console.log("Blah2...");
 });
 
-delay(2000);
+chrome.runtime.sendMessage({type: 'get_rank', rest_name: rest_name}, function(response) {
+	console.log("Blah3...");
+});
+
+delay(1000);
 chrome.runtime.sendMessage({type: 'improve_taste', rest_name: rest_name}, function(response) {
 	console.log("Blah3...");
 });
@@ -40,7 +44,7 @@ chrome.runtime.onMessage.addListener(
 			</table>\
 		</div>";
 				
-		$( content ).insertBefore( ".restaurant-items-wrapper" );
+		$( content ).insertBefore( ".restaurant-items-wrapper:eq(1)" );
 	} else if (request.type == "get_price") {
 		item_prices = request.message;
 		final_map = {}
@@ -55,6 +59,8 @@ chrome.runtime.onMessage.addListener(
 			final_map[items[i]] = 1;
 		}
 		taste_increase(final_map);
+	} else if (request.type == "get_rank") {
+		show_rank(request.message);
 	}
   });
 
@@ -63,12 +69,18 @@ function update_cost(price_map) {
 	$(".food-item").each(function (index) {
 		var item_name = $(this).find("h5").text().trim();
 		if (price_map[item_name] != undefined) {
-			console.log($(this).find(".item-price").html());
 			var price = $(this).find(".item-price").text().trim();
 			var new_price = price_map[item_name];
 			$(this).find(".item-price:eq(1)").html(price + "<br /> <span style=\"color: red\">Recommended Price:" + new_price + "<span>")
 		}
 	})
+}
+
+function show_rank(rank_array) {
+	air = rank_array[0];
+	local_rank = rank_array[1];
+	var title = $("h1.title").find("span:eq(0)").text().trim();
+	$("h1.title").find("span:eq(0)").html(title + "&nbsp; &nbsp;<button type=\"button\" class=\"btn btn-success btn-xs\">All India Rank: " + air + "</button> <button type=\"button\" class=\"btn btn-danger btn-xs\">Area Rank: " + local_rank + "</button>")
 }
 
 function taste_increase(items) {
@@ -77,7 +89,9 @@ function taste_increase(items) {
 	$(".food-item").each(function (index) {
 		var item_name = $(this).find("h5").text().trim();
 		if (items[item_name] != undefined) {
-			var price = $(this).find(".item-price").text().trim();
+			var price = $(this).find(".item-price:eq(1)").html();
+			console.log("Pruce is: djioifjo")
+			console.log(price);
 			$(this).find(".item-price:eq(1)").html(price + "<br /> <button type=\"button\" class=\"btn btn-danger btn-xs\">Improve Taste</button>")
 		}
 	})

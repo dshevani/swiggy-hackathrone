@@ -50,4 +50,57 @@ public class RestaurantController {
         return items;
     }
 
+    private Integer getAllIndiaRank(String restName) {
+
+        try{
+            PreparedStatement ps = sqlConnection.prepareStatement("select count(od.order_id) as count, r.name as name from order_details od\n" +
+                    "\tinner join `restaurants` r on (r.id = od.`restaurant_id`)\n" +
+                    "\tinner join `area` a on (r.`area_id`= a.`id`)\n" +
+                    "    group by od.`restaurant_id` order by count desc;");
+            ResultSet rs = ps.executeQuery();
+            int i = 1;
+            while(rs.next()){
+                if (restName.equalsIgnoreCase(rs.getString("name"))) {
+                    break;
+                }
+                i += 1;
+            }
+
+            return i;
+        }catch(SQLException e){
+            e.printStackTrace();
+        }
+        return -1;
+    }
+
+    @RequestMapping(value = "/{slug}/rank", method = RequestMethod.GET)
+    public List<Integer> getRank(@PathVariable("slug") String restName) throws JsonProcessingException {
+
+        try{
+            PreparedStatement ps = sqlConnection.prepareStatement("select count(od.order_id) as count, r.name as name from order_details od\n" +
+                    "\tinner join `restaurants` r on (r.id = od.`restaurant_id`)\n" +
+                    "\tinner join `area` a on (r.`area_id`= a.`id`) \n" +
+                    "\twhere a.id IN (select a.id from area a\t\n" +
+                    "\t\tinner join `restaurants` r on (r.`area_id`= a.`id`)\n" +
+                    "\t\twhere r.name = \"" + restName + "\"\n" +
+                    "\t\t)\n" +
+                    "    group by od.`restaurant_id` order by count desc;");
+            ResultSet rs = ps.executeQuery();
+            int i = 1;
+            while(rs.next()){
+                if (restName.equalsIgnoreCase(rs.getString("name"))) {
+                    break;
+                }
+                i += 1;
+            }
+            List<Integer> output = new ArrayList<>();
+            output.add(getAllIndiaRank(restName));
+            output.add(i);
+            return output;
+        }catch(SQLException e){
+            e.printStackTrace();
+        }
+        return new ArrayList<>();
+    }
+
 }
