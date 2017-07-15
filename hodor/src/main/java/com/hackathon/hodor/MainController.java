@@ -1,11 +1,8 @@
 package com.hackathon.hodor;
 
-import com.mysql.jdbc.Driver;
 import org.springframework.boot.autoconfigure.*;
-import org.springframework.jdbc.datasource.SimpleDriverDataSource;
 import org.springframework.web.bind.annotation.*;
 
-import javax.sql.DataSource;
 import java.sql.*;
 
 

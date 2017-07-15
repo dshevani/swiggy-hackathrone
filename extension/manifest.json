@@ -10,11 +10,16 @@
    "default_popup": "popup.html"
   },
   "permissions": [
-   "activeTab"
+ "https://*/",
+ "contextMenus",
+ "background",
+ "notifications",
+ "declarativeContent",
+ "tabs",
+ "activeTab"
    ],
   "background": {
-    "scripts": ["js/background.js"],
-    "persistent": true
+    "scripts": ["js/jquery-3.2.1.min.js", "js/background.js"]
   },
   "content_scripts": [
     {
