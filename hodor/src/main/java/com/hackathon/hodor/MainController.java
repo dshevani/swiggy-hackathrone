@@ -15,15 +15,23 @@ import java.util.List;
 @EnableAutoConfiguration
 public class MainController {
 
+	private static Connection sqlConnection;
+	
+	public MainController() {
+		try {
+			sqlConnection = DriverManager.getConnection("jdbc:mysql://localhost:3306/swiggy?user=root&password=");
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+	}
+	
     @RequestMapping("/")
     String home() {
-        Connection con = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
 
         try{
-             con = DriverManager.getConnection("jdbc:mysql://localhost:3306/swiggy_hackathon?user=root&password=");
-            ps = con.prepareStatement("select * from area");
+            ps = sqlConnection.prepareStatement("select * from area");
             rs = ps.executeQuery();
             while(rs.next()){
                 System.out.println(rs.getString("name"));
