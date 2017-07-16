@@ -13,7 +13,7 @@ chrome.runtime.sendMessage({type: 'get_rank', rest_name: rest_name}, function(re
 	console.log("Blah3...");
 });
 
-delay(1000);
+delay(3000);
 chrome.runtime.sendMessage({type: 'improve_taste', rest_name: rest_name}, function(response) {
 	console.log("Blah3...");
 });
@@ -32,7 +32,7 @@ chrome.runtime.onMessage.addListener(
 	  	}
 	  	content = "\
 		<div >\
-			<h1 style=\"text-align: center;\">Menus recomended</h1>\
+			<h1 style=\"text-align: center;\">Hot items in your area</h1>\
 			<table class=\"table\"> \
 				<thead> \
 					<tr> \
