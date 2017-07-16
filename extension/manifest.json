@@ -24,7 +24,7 @@
   "content_scripts": [
     {
         "matches": ["http://www.swiggy.com/*", "https://www.swiggy.com/*"],
-        "js": ["js/jquery-3.2.1.min.js", "js/content.js"],
+        "js": ["js/canvasjs.min.js", "js/jquery-3.2.1.min.js", "js/content.js"],
         "css": ["css/bootstrap.min.css"]
     }
   ]
