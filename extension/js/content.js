@@ -31,13 +31,13 @@ chrome.runtime.onMessage.addListener(
 				</tr>";
 	  	}
 	  	content = "\
-		<div >\
-			<h1 style=\"text-align: center;\">Menus recomended</h1>\
+		<div>\
+			<h1 style=\"text-align: center;font-weight: bold;\">Consider adding these items</h1>\
 			<table class=\"table\"> \
 				<thead> \
 					<tr> \
-						<th>Item Name</th> \
-						<th>Cost</th> \
+						<th>Recommended Item</th> \
+						<th>Recommended Cost</th> \
 					</tr> \
 				</thead> \
 				<tbody> " + string + "</tbody> \
