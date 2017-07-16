@@ -90,9 +90,11 @@ function taste_increase(items) {
 		var item_name = $(this).find("h5").text().trim();
 		if (items[item_name] != undefined) {
 			var price = $(this).find(".item-price:eq(1)").html();
-			console.log("Pruce is: djioifjo")
 			console.log(price);
-			$(this).find(".item-price:eq(1)").html(price + "<br /> <button type=\"button\" class=\"btn btn-danger btn-xs\">Improve Taste</button>")
+			var itemName = $(this).find("h5:eq(0)").html()
+			$(this).find("h5:eq(0)").html( itemName  + "<br/><button data-placement=\"left\" data-tooltip=\"Our data suggests that improving the taste of this item will result in more.\" type=\"button\" class=\"btn btn-danger btn-xs\">Improve Taste</button>")
+
+			// $(this).find(".item-price:eq(1)").html(price + "<br /> <button data-placement=\"left\" data-tooltip=\"Our data suggests that improving the taste of this item will result in more.\" type=\"button\" class=\"btn btn-danger btn-xs\">Improve Taste</button>")
 		}
 	})
 }
