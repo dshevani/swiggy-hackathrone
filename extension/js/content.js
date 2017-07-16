@@ -627,13 +627,13 @@ chrome.runtime.onMessage.addListener(
 				</tr>";
 	  	}
 	  	content = "\
-		<div >\
-			<h1 style=\"text-align: center;\">Hot items in your area</h1>\
+		<div style=\"border: 1px solid red;\">\
+			<h1 style=\"text-align: center;font-weight: bold;\">Consider adding these items</h1>\
 			<table class=\"table\"> \
 				<thead> \
 					<tr> \
-						<th>Item Name</th> \
-						<th>Cost</th> \
+						<th>Recommended Item</th> \
+						<th>Recommended Price</th> \
 					</tr> \
 				</thead> \
 				<tbody> " + string + "</tbody> \
@@ -689,9 +689,11 @@ function taste_increase(items) {
 		var item_name = $(this).find("h5").text().trim();
 		if (items[item_name] != undefined) {
 			var price = $(this).find(".item-price:eq(1)").html();
-			console.log("Pruce is: djioifjo")
 			console.log(price);
-			$(this).find(".item-price:eq(1)").html(price + "<br /> <button type=\"button\" class=\"btn btn-danger btn-xs\">Improve Taste</button>")
+			var itemName = $(this).find("h5:eq(0)").html()
+			$(this).find("h5:eq(0)").html( itemName  + "<br/><button data-placement=\"left\" data-tooltip=\"Our data suggests that improving the taste of this item will result in more.\" type=\"button\" class=\"btn btn-danger btn-xs\">Improve Taste</button>")
+
+			// $(this).find(".item-price:eq(1)").html(price + "<br /> <button data-placement=\"left\" data-tooltip=\"Our data suggests that improving the taste of this item will result in more.\" type=\"button\" class=\"btn btn-danger btn-xs\">Improve Taste</button>")
 		}
 	})
 }

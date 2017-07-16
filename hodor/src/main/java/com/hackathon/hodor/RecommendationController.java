@@ -13,20 +13,18 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @EnableAutoConfiguration
+@CrossOrigin(origins = "*", maxAge = 3600)
 public class RecommendationController {
 
 	private static Connection sqlConnection;
 
 	public RecommendationController() {
 		try {
-			sqlConnection = DriverManager.getConnection("jdbc:mysql://localhost:3306/swiggy?user=root&password=");
+			sqlConnection = DriverManager.getConnection("jdbc:mysql://localhost:3306/swiggy_hackathon?user=root&password=");
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
@@ -50,35 +48,32 @@ public class RecommendationController {
 		return "Hello World!";
 	}
 
-	@RequestMapping("/recommendations/{restaurant_id}")
-	public List<RecommendationResult> getRecommendations(@PathVariable("restaurant_id") int restaurantId) {
+	@RequestMapping("/recommendations")
+	public List<RecommendationResult> getRecommendations(@RequestParam("restaurant_name") String restaurantName) {
 		List<RecommendationResult> results = new ArrayList<RecommendationResult>();
 		PreparedStatement ps = null;
 		ResultSet rs = null;
 		Map<String, Double> restaurantItems = null;
 		try {
-			ps = sqlConnection.prepareStatement("call GET_ITEMS_FOR(" + restaurantId + ")");
+			ps = sqlConnection.prepareStatement("call GET_ITEMS_FOR(\"" + restaurantName + "\")");
 			rs = ps.executeQuery();
 			restaurantItems = new HashMap<String, Double>();
 			while(rs.next()){
-				restaurantItems.put(rs.getString("item_name"), rs.getDouble("item_price"));
-			}
-			double max = 0, min = 0, avg = 0;
-			for (Map.Entry<String, Double> entry : restaurantItems.entrySet()) {
-				String itemName = entry.getKey();
-				Double itemPrice = entry.getValue();
+				String itemName = rs.getString("item_name");
+				Double itemPrice = rs.getDouble("item_price");
+				int restaurantId = rs.getInt("id");
 				ps = sqlConnection.prepareStatement("call GET_RECOMMENDATION_FOR(" + restaurantId + ",\"" + itemName +"\")");
-				rs = ps.executeQuery();
+				ResultSet res = ps.executeQuery();
+				double max, min, avg = 0;
 
-				while(rs.next()){
-					max = rs.getDouble("max");
-					min = rs.getDouble("max");
-					avg = rs.getDouble("avg");
-					break;
+				while(res.next()) {
+					max = res.getDouble("max");
+					min = res.getDouble("max");
+					avg = res.getDouble("avg");
+					if (avg > 0 && itemPrice > avg) {
+						results.add(new RecommendationResult(itemName, itemPrice, Math.ceil(avg)));
+					}
 				}
-				if (avg > 0 && itemPrice > avg) {
-					results.add(new RecommendationResult(itemName, itemPrice, Math.ceil(avg)));
-				}                
 			}
 
 		} catch(SQLException e){
