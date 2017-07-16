@@ -38,5 +38,15 @@ chrome.runtime.onMessage.addListener(function(message, sendResponse) {
 			  chrome.tabs.sendMessage(tab.id, {message: data, type: message.type});
 			 });
 		});
+    } else if (message && message.type == 'get_popularity') {
+    	$.ajax({
+    		url: "http://172.16.120.190:8080/get_popular?name=" + message.rest_name,
+    	}).done(function(data) {
+			chrome.tabs.getSelected(null, function(tab) {
+			  console.log("Background script is sending a message to contentscript:'" + data +"'");
+			  console.log(data);
+			  chrome.tabs.sendMessage(tab.id, {message: data, type: message.type});
+			 });
+		});
     }
 });
