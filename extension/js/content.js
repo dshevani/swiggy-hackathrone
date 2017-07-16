@@ -92,7 +92,7 @@ function taste_increase(items) {
 			var price = $(this).find(".item-price:eq(1)").html();
 			console.log("Pruce is: djioifjo")
 			console.log(price);
-			$(this).find(".item-price:eq(1)").html(price + "<br /> <button type=\"button\" class=\"btn btn-danger btn-xs\">Insights</button>")
+			$(this).find(".item-price:eq(1)").html(price + "<br /> <button type=\"button\" class=\"btn btn-danger btn-xs\">Improve Taste</button>")
 		}
 	})
 }
