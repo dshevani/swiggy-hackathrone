@@ -31,7 +31,7 @@ chrome.runtime.onMessage.addListener(
 				</tr>";
 	  	}
 	  	content = "\
-		<div>\
+		<div style=\"border: 1px solid red;\">\
 			<h1 style=\"text-align: center;font-weight: bold;\">Consider adding these items</h1>\
 			<table class=\"table\"> \
 				<thead> \
